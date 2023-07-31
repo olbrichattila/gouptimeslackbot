@@ -1,4 +1,4 @@
-# Uptime slack bot
+# Golang Uptime Slack bot
 
 This application can monitor one or multiple websites and send notification to slack channel if the website is down.
 
