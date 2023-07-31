@@ -60,3 +60,5 @@ func (t *configTestSuite) setCustomEnvValues() {
 	os.Setenv("SLOW_WARNING_LIMIT", "1500")
 	os.Setenv("SCAN_FREQUENCY", "35")
 }
+
+

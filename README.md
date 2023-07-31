@@ -80,3 +80,10 @@ kill 77193
 
 Application killed
 
+## Coming soon
+- Report with daily maximum, minimum and avarage page loads, number of outages once a day
+- Database support to save report 
+- Different scan frequency per user
+ 
+
+
