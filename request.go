@@ -12,6 +12,7 @@ type requestInterface interface {
 type request struct {
 }
 
+// @todo add http user agent from config
 func (r *request) get(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
