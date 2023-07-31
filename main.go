@@ -35,9 +35,11 @@ func main() {
 }
 
 func doScan(app *app, config configAccount) {
+	// @todo move this out from here into a tetable format
 	elapsed, err := app.client.TestUrl(config.MonitorUrl, config.MonitorText)
 	if err != nil {
-		message := fmt.Sprintf("%s: Up boat report:\n\tElapsed: %d\n\tError:%v", config.MonitorUrl, elapsed, err)
+		// @todo add event date / time to the message
+		message := fmt.Sprintf("%s:\nUp boat report:\n\tElapsed: %d\n\tError:%v", config.MonitorUrl, elapsed, err)
 		err = app.slackPublisher.Send(config.SlackBotToken, config.SlackChannelId, message)
 		if err != nil {
 			fmt.Println(err)
@@ -45,7 +47,8 @@ func doScan(app *app, config configAccount) {
 	}
 
 	if config.SlowWarningLimit > 0 && elapsed > config.SlowWarningLimit {
-		message := fmt.Sprintf("%s: Slow warning limit reached:\n\tLimit: %d\n\tElapsed: %d", config.MonitorUrl, config.SlowWarningLimit, elapsed)
+		// @todo add event date / time to the message
+		message := fmt.Sprintf("%s:\nSlow warning limit reached:\n\tLimit: %d\n\tElapsed: %d", config.MonitorUrl, config.SlowWarningLimit, elapsed)
 		err = app.slackPublisher.Send(config.SlackBotToken, config.SlackChannelId, message)
 		if err != nil {
 			fmt.Println(err)
