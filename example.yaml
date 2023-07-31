@@ -1,0 +1,12 @@
+ScanFrequency: 0
+Accounts:
+- SlackBotToken: your token
+  SlackChannelId: your channel id
+  MonitorUrl: https://yourdomain1.com
+  MonitorText: <html
+  SlowWarningLimit: 3000
+- SlackBotToken: your token
+  SlackChannelId: your channel id
+  MonitorUrl: https://yourdomain2.com/health
+  MonitorText: Welcome 
+  SlowWarningLimit: 6000
