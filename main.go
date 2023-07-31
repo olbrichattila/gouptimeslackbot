@@ -34,8 +34,12 @@ func main() {
 	}
 }
 
+/*
+ * @todo move this out from here into a tetable format
+ * add http response code check and report other then 20*
+ * limit number of messages if there are too many and aggregate them
+ */
 func doScan(app *app, config configAccount) {
-	// @todo move this out from here into a tetable format
 	elapsed, err := app.client.TestUrl(config.MonitorUrl, config.MonitorText)
 	if err != nil {
 		// @todo add event date / time to the message
