@@ -39,6 +39,7 @@ func (s *scanner) doScan(config configAccount) {
 		)
 		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelId, message)
 		if err != nil {
+			// this shold be logged instead
 			fmt.Println(err)
 		}
 	}
@@ -53,6 +54,7 @@ func (s *scanner) doScan(config configAccount) {
 		)
 		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelId, message)
 		if err != nil {
+			// this shold be logged instead
 			fmt.Println(err)
 		}
 	}
