@@ -12,12 +12,18 @@ type scannerInterface interface {
 type scanner struct {
 	client    upClientInterface
 	publisher SlackPublisherInterface
+	logger    loggerInterface
 }
 
-func newScanner(client upClientInterface, publisher SlackPublisherInterface) *scanner {
+func newScanner(
+	client upClientInterface,
+	publisher SlackPublisherInterface,
+	logger loggerInterface,
+) *scanner {
 	s := &scanner{}
 	s.client = client
 	s.publisher = publisher
+	s.logger = logger
 
 	return s
 }
@@ -39,8 +45,7 @@ func (s *scanner) doScan(config configAccount) {
 		)
 		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelId, message)
 		if err != nil {
-			// this shold be logged instead
-			fmt.Println(err)
+			s.logger.Log(err.Error())
 		}
 	}
 
@@ -54,8 +59,7 @@ func (s *scanner) doScan(config configAccount) {
 		)
 		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelId, message)
 		if err != nil {
-			// this shold be logged instead
-			fmt.Println(err)
+			s.logger.Log(err.Error())
 		}
 	}
 }

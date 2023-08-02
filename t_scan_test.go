@@ -30,51 +30,81 @@ func (t *scanTestSuite) SetupTest() {
 func (t *scanTestSuite) TestItMessageSentIfLoadingTimeExceededWarningLimit() {
 	upClientSpy := newUpClientSpy().withElapsedTime(100)
 	publisherSpy := NewSlackPublisherSpy()
+	loggerSpy := newLoggerSpy()
 
-	scanner := newScanner(upClientSpy, publisherSpy)
+	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
 	scanner.doScan(*t.account)
 
 	t.Equal(1, upClientSpy.called)
 
 	t.Equal(1, publisherSpy.called)
+
+	t.Equal(0, loggerSpy.called)
 }
 
 func (t *scanTestSuite) TestItMessageNotSentIfLoadingTimeUnderWarningLimit() {
 	upClientSpy := newUpClientSpy().withElapsedTime(20)
 	publisherSpy := NewSlackPublisherSpy()
+	loggerSpy := newLoggerSpy()
 
-	scanner := newScanner(upClientSpy, publisherSpy)
+	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
 	scanner.doScan(*t.account)
 
 	t.Equal(1, upClientSpy.called)
 
 	t.Equal(0, publisherSpy.called)
+
+	t.Equal(0, loggerSpy.called)
 }
 
 func (t *scanTestSuite) TestItMessageSentIfPageDidNotLoad() {
 	upClientSpy := newUpClientSpy().withElapsedTime(10).withError("cannot connect")
 	publisherSpy := NewSlackPublisherSpy()
+	loggerSpy := newLoggerSpy()
 
-	scanner := newScanner(upClientSpy, publisherSpy)
+	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
 	scanner.doScan(*t.account)
 
 	t.Equal(1, upClientSpy.called)
 
 	t.Equal(1, publisherSpy.called)
+
+	t.Equal(0, loggerSpy.called)
 }
 
 func (t *scanTestSuite) TestIfTwoMessageSentIfPageDidNotLoadAndTimeAlsoExceeded() {
 	upClientSpy := newUpClientSpy().withElapsedTime(100).withError("cannot connect")
 	publisherSpy := NewSlackPublisherSpy()
+	loggerSpy := newLoggerSpy()
 
-	scanner := newScanner(upClientSpy, publisherSpy)
+	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
 	scanner.doScan(*t.account)
 
 	t.Equal(1, upClientSpy.called)
 
 	t.Equal(2, publisherSpy.called)
+
+	t.Equal(0, loggerSpy.called)
+}
+
+func (t *scanTestSuite) TestSendMessageErrorsAreLogged() {
+	upClientSpy := newUpClientSpy().withElapsedTime(100).withError("cannot connect")
+	publisherSpy := NewSlackPublisherSpy().withError("cannot send slack message")
+	loggerSpy := newLoggerSpy()
+
+	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
+
+	scanner.doScan(*t.account)
+
+	t.Equal(1, upClientSpy.called)
+
+	t.Equal(2, publisherSpy.called)
+
+	t.Equal(2, loggerSpy.called)
+
+	t.Equal("cannot send slack message", loggerSpy.lastMessage)
 }

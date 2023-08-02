@@ -2,3 +2,5 @@
 .env
 upclient
 config.yaml
+logfile.log
+

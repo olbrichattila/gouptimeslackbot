@@ -12,17 +12,19 @@ type app struct {
 	slackPublisher SlackPublisherInterface
 	config         configInterface
 	scanner        scannerInterface
+	logger         loggerInterface
 }
 
 func newApp() *app {
 	client := newUpClient(&request{})
 	publisher := NewSlackPublisher()
+	logger := newLogger()
 
 	return &app{
 		client:         client,
 		slackPublisher: publisher,
 		config:         resolveConfig(),
-		scanner:        newScanner(client, publisher),
+		scanner:        newScanner(client, publisher, logger),
 	}
 }
 
@@ -33,6 +35,7 @@ func main() {
 	accounts := app.config.getConfigAccounts()
 	for {
 		for _, config := range *accounts {
+
 			app.scanner.Scan(config)
 		}
 		time.Sleep(time.Duration(frequency) * time.Second)
