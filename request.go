@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -20,6 +21,10 @@ func (r *request) get(url string) (string, error) {
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode > 299 || resp.StatusCode < 200 {
+		return "", fmt.Errorf("Response status code is not withing accepted range %d", resp.StatusCode)
+	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
