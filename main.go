@@ -35,7 +35,6 @@ func main() {
 	accounts := app.config.getConfigAccounts()
 	for {
 		for _, config := range *accounts {
-
 			app.scanner.Scan(config)
 		}
 		time.Sleep(time.Duration(frequency) * time.Second)
