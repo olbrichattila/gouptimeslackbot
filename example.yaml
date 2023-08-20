@@ -4,9 +4,11 @@ Accounts:
   SlackChannelId: your channel id
   MonitorUrl: https://yourdomain1.com
   MonitorText: <html
+  HttpUserAgent: TestUptimeBot/1.0
   SlowWarningLimit: 3000
 - SlackBotToken: your token
   SlackChannelId: your channel id
   MonitorUrl: https://yourdomain2.com/health
   MonitorText: Welcome 
+  HttpUserAgent: TestUptimeBot/1.0
   SlowWarningLimit: 6000

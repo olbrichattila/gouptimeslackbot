@@ -31,10 +31,11 @@ func (c *envConfig) load() {
 		SlackChannelId:   os.Getenv("SLACK_CHANNEL_ID"),
 		MonitorUrl:       os.Getenv("MONITOR_URL"),
 		MonitorText:      os.Getenv("MONITOR_TEXT"),
+		HttpUserAgent:    os.Getenv("HTTP_USER_AGENT"),
 		SlowWarningLimit: c.asInt("SLOW_WARNING_LIMIT"),
 	}
-	c.config.ScanFrequency = c.asInt("SCAN_FREQUENCY")
 
+	c.config.ScanFrequency = c.asInt("SCAN_FREQUENCY")
 	c.config.Accounts = []configAccount{account}
 }
 

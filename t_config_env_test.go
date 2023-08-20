@@ -32,6 +32,7 @@ func (t *configTestSuite) TestConfigReturnsCorrectDefaultValuesFromEnv() {
 		t.Equal("", a.SlackBotToken)
 		t.Equal("", a.SlackChannelId)
 		t.Equal(0, a.SlowWarningLimit)
+		t.Equal("", a.HttpUserAgent)
 	}
 }
 
@@ -48,8 +49,8 @@ func (t *configTestSuite) TestConfigReturnsCorrectValuesFromEnv() {
 		t.Equal("token", a.SlackBotToken)
 		t.Equal("channel id", a.SlackChannelId)
 		t.Equal(1500, a.SlowWarningLimit)
+		t.Equal("TestUserAgent/1.0", a.HttpUserAgent)
 	}
-
 }
 
 func (t *configTestSuite) setCustomEnvValues() {
@@ -59,6 +60,5 @@ func (t *configTestSuite) setCustomEnvValues() {
 	os.Setenv("MONITOR_TEXT", "text")
 	os.Setenv("SLOW_WARNING_LIMIT", "1500")
 	os.Setenv("SCAN_FREQUENCY", "35")
+	os.Setenv("HTTP_USER_AGENT", "TestUserAgent/1.0")
 }
-
-

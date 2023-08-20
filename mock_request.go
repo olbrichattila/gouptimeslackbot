@@ -15,8 +15,7 @@ func newMockRequestSpy() *mockRequestSpy {
 	return &mockRequestSpy{}
 }
 
-func (r *mockRequestSpy) get(url string) (string, error) {
-
+func (r *mockRequestSpy) get(userAgen, url string) (string, error) {
 	if r.delay > 0 {
 		time.Sleep(time.Duration(r.delay) * time.Millisecond)
 	}

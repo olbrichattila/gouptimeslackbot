@@ -7,19 +7,29 @@ import (
 )
 
 type requestInterface interface {
-	get(string) (string, error)
+	get(string, string) (string, error)
 }
 
 type request struct {
 }
 
-// @todo add http user agent from config
-func (r *request) get(url string) (string, error) {
-	resp, err := http.Get(url)
+func (r *request) get(userAgent, url string) (string, error) {
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", err
 	}
 
+	if userAgent == "" {
+		userAgent = defaultHttpUserAgent
+	}
+
+	req.Header.Set("User-Agent", userAgent)
+
+	client := http.DefaultClient
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 299 || resp.StatusCode < 200 {

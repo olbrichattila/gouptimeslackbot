@@ -7,7 +7,7 @@ import (
 )
 
 type upClientInterface interface {
-	TestUrl(string, string) (int, error)
+	TestUrl(string, string, string) (int, error)
 }
 
 type upClient struct {
@@ -18,9 +18,9 @@ func newUpClient(request requestInterface) *upClient {
 	return &upClient{request: request}
 }
 
-func (u *upClient) TestUrl(url, contains string) (int, error) {
+func (u *upClient) TestUrl(userAgent, url, contains string) (int, error) {
 	startTime := time.Now()
-	resp, err := u.request.get(url)
+	resp, err := u.request.get(userAgent, url)
 	if err != nil {
 		return u.elapsedTimeInMiliseconds(startTime), err
 	}

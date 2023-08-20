@@ -34,7 +34,7 @@ func (s *scanner) Scan(config configAccount) {
 
 func (s *scanner) doScan(config configAccount) {
 	formattedDateTime := time.Now().Format("2006-01-02 15:04:05")
-	elapsed, err := s.client.TestUrl(config.MonitorUrl, config.MonitorText)
+	elapsed, err := s.client.TestUrl(config.HttpUserAgent, config.MonitorUrl, config.MonitorText)
 	if err != nil {
 		message := fmt.Sprintf(
 			"Host: %s:\nUp bot report:\n\tDate: %s\n\tElapsed: %d miliseconds\n\tError:%v",

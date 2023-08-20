@@ -18,8 +18,11 @@ MONITOR_TEXT="<html"
 # Slow warning limit is set in miliseconds
 SLOW_WARNING_LIMIT=3000
 
-#Scan frequency in seconds
+# Scan frequency in seconds
 SCAN_FREQUENCY=30
+
+# User agent, if not set it uses GolangUptimeBot/1.0
+HTTP_USER_AGENT="TestUptimeBot/1.0"
 ```
 
 ### Yaml file
@@ -33,15 +36,18 @@ Accounts:
   SlackChannelId: your channel id
   MonitorUrl: https://yourdomain1.com
   MonitorText: <html
+  HttpUserAgent: UptimeBot/1.0
   SlowWarningLimit: 3000
 - SlackBotToken: your token
   SlackChannelId: your channel id
   MonitorUrl: https://yourdomain2.com/health
   MonitorText: Welcome 
+  HttpUserAgent: UptimeBot/1.0
   SlowWarningLimit: 6000
 ```
 
 It is possible to set the same token and same channel, or same token different channel or different token and different channel in any combination
+Note: The HttpUserAgent not required, if not set it will defult to `GolangUptimeBot/1.0` as of now
 
 ### Closing the applications
 ```

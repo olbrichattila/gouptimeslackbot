@@ -6,6 +6,7 @@ import (
 )
 
 const defaultScanFrequency = 60
+const defaultHttpUserAgent = "GolangUptimeBot/1.0"
 
 type app struct {
 	client         upClientInterface

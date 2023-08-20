@@ -12,6 +12,7 @@ type configAccount struct {
 	MonitorUrl       string `yaml:"MonitorUrl"`
 	MonitorText      string `yaml:"MonitorText"`
 	SlowWarningLimit int    `yaml:"SlowWarningLimit"`
+	HttpUserAgent    string `yaml:"HttpUserAgent"`
 }
 
 type config struct {
