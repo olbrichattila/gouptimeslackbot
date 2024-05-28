@@ -2,21 +2,21 @@ package main
 
 import "fmt"
 
-type SlackPublisherSpy struct {
+type slackPublisherSpy struct {
 	called int
 	err    error
 }
 
-func NewSlackPublisherSpy() *SlackPublisherSpy {
-	return &SlackPublisherSpy{}
+func newSlackPublisherSpy() *slackPublisherSpy {
+	return &slackPublisherSpy{}
 }
 
-func (m *SlackPublisherSpy) Send(token, channelID, message string) error {
+func (m *slackPublisherSpy) Send(_, _, _ string) error {
 	m.called++
 	return m.err
 }
 
-func (m *SlackPublisherSpy) withError(errorMessage string) *SlackPublisherSpy {
+func (m *slackPublisherSpy) withError(errorMessage string) *slackPublisherSpy {
 	m.err = fmt.Errorf(errorMessage)
 
 	return m

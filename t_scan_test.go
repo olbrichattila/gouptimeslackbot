@@ -20,8 +20,8 @@ func (t *scanTestSuite) SetupTest() {
 	fmt.Println(Yellow+"Running test scan env: "+Green, t.T().Name()+Reset)
 	t.account = &configAccount{
 		SlackBotToken:    "token",
-		SlackChannelId:   "channelId",
-		MonitorUrl:       "http://test.com",
+		SlackChannelID:   "channelId",
+		MonitorURL:       "http://test.com",
 		MonitorText:      "<html",
 		SlowWarningLimit: 30,
 	}
@@ -29,7 +29,7 @@ func (t *scanTestSuite) SetupTest() {
 
 func (t *scanTestSuite) TestItMessageSentIfLoadingTimeExceededWarningLimit() {
 	upClientSpy := newUpClientSpy().withElapsedTime(100)
-	publisherSpy := NewSlackPublisherSpy()
+	publisherSpy := newSlackPublisherSpy()
 	loggerSpy := newLoggerSpy()
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
@@ -45,7 +45,7 @@ func (t *scanTestSuite) TestItMessageSentIfLoadingTimeExceededWarningLimit() {
 
 func (t *scanTestSuite) TestItMessageNotSentIfLoadingTimeUnderWarningLimit() {
 	upClientSpy := newUpClientSpy().withElapsedTime(20)
-	publisherSpy := NewSlackPublisherSpy()
+	publisherSpy := newSlackPublisherSpy()
 	loggerSpy := newLoggerSpy()
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
@@ -61,7 +61,7 @@ func (t *scanTestSuite) TestItMessageNotSentIfLoadingTimeUnderWarningLimit() {
 
 func (t *scanTestSuite) TestItMessageSentIfPageDidNotLoad() {
 	upClientSpy := newUpClientSpy().withElapsedTime(10).withError("cannot connect")
-	publisherSpy := NewSlackPublisherSpy()
+	publisherSpy := newSlackPublisherSpy()
 	loggerSpy := newLoggerSpy()
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
@@ -77,7 +77,7 @@ func (t *scanTestSuite) TestItMessageSentIfPageDidNotLoad() {
 
 func (t *scanTestSuite) TestIfTwoMessageSentIfPageDidNotLoadAndTimeAlsoExceeded() {
 	upClientSpy := newUpClientSpy().withElapsedTime(100).withError("cannot connect")
-	publisherSpy := NewSlackPublisherSpy()
+	publisherSpy := newSlackPublisherSpy()
 	loggerSpy := newLoggerSpy()
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
@@ -93,7 +93,7 @@ func (t *scanTestSuite) TestIfTwoMessageSentIfPageDidNotLoadAndTimeAlsoExceeded(
 
 func (t *scanTestSuite) TestSendMessageErrorsAreLogged() {
 	upClientSpy := newUpClientSpy().withElapsedTime(100).withError("cannot connect")
-	publisherSpy := NewSlackPublisherSpy().withError("cannot send slack message")
+	publisherSpy := newSlackPublisherSpy().withError("cannot send slack message")
 	loggerSpy := newLoggerSpy()
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)

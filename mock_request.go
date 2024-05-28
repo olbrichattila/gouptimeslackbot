@@ -15,7 +15,7 @@ func newMockRequestSpy() *mockRequestSpy {
 	return &mockRequestSpy{}
 }
 
-func (r *mockRequestSpy) get(userAgen, url string) (string, error) {
+func (r *mockRequestSpy) get(_, _ string) (string, error) {
 	if r.delay > 0 {
 		time.Sleep(time.Duration(r.delay) * time.Millisecond)
 	}
@@ -24,7 +24,7 @@ func (r *mockRequestSpy) get(userAgen, url string) (string, error) {
 }
 
 func (r *mockRequestSpy) withError() *mockRequestSpy {
-	r.err = fmt.Errorf("Custom test error")
+	r.err = fmt.Errorf("custom test error")
 	return r
 }
 

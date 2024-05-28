@@ -23,15 +23,18 @@ func newConfig(laodEnv bool) *envConfig {
 
 func (c *envConfig) load() {
 	if c.loadEnv {
-		c.loadDotEnv()
+		err := c.loadDotEnv()
+		if err != nil {
+			panic("Error loading configuration: " + err.Error())
+		}
 	}
 
 	account := configAccount{
 		SlackBotToken:    os.Getenv("SLACK_BOT_TOKEN"),
-		SlackChannelId:   os.Getenv("SLACK_CHANNEL_ID"),
-		MonitorUrl:       os.Getenv("MONITOR_URL"),
+		SlackChannelID:   os.Getenv("SLACK_CHANNEL_ID"),
+		MonitorURL:       os.Getenv("MONITOR_URL"),
 		MonitorText:      os.Getenv("MONITOR_TEXT"),
-		HttpUserAgent:    os.Getenv("HTTP_USER_AGENT"),
+		HTTPUserAgent:    os.Getenv("HTTP_USER_AGENT"),
 		SlowWarningLimit: c.asInt("SLOW_WARNING_LIMIT"),
 	}
 

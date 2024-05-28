@@ -42,7 +42,7 @@ func (t *upClientTestSuite) TestUpClientReturnsTrueIfNoContent() {
 	mockRequestSpy := newMockRequestSpy().withDelay(10)
 	client := newUpClient(mockRequestSpy)
 
-	elapsed, err := client.TestUrl(defaultHttpUserAgent, "https://google.com", "")
+	elapsed, err := client.TestURL(defaultHTTPUserAgent, "https://google.com", "")
 
 	t.Nil(err)
 
@@ -52,7 +52,7 @@ func (t *upClientTestSuite) TestUpClientReturnsTrueIfNoContent() {
 func (t *upClientTestSuite) TestUpClientReturnsErrorIfPageNotExist() {
 	mockRequestSpy := newMockRequestSpy().withError().withDelay(10)
 	client := newUpClient(mockRequestSpy)
-	elapsed, err := client.TestUrl(defaultHttpUserAgent, "https://dssddasda.com", "")
+	elapsed, err := client.TestURL(defaultHTTPUserAgent, "https://dssddasda.com", "")
 
 	t.NotNil(err)
 
@@ -62,7 +62,7 @@ func (t *upClientTestSuite) TestUpClientReturnsErrorIfPageNotExist() {
 func (t *upClientTestSuite) TestUpClientReturnsErrorIfContentDoesNotMatch() {
 	mockRequestSpy := newMockRequestSpy().withResponse("<html").withDelay(10)
 	client := newUpClient(mockRequestSpy)
-	elapsed, err := client.TestUrl(defaultHttpUserAgent, "https://google.com", "itisnotmatch")
+	elapsed, err := client.TestURL(defaultHTTPUserAgent, "https://google.com", "itisnotmatch")
 
 	t.NotNil(err)
 
@@ -72,7 +72,7 @@ func (t *upClientTestSuite) TestUpClientReturnsErrorIfContentDoesNotMatch() {
 func (t *upClientTestSuite) TestUpClientReturnsNoErrorIfContentMatches() {
 	mockRequestSpy := newMockRequestSpy().withResponse("<html").withDelay(10)
 	client := newUpClient(mockRequestSpy)
-	elapsed, err := client.TestUrl(defaultHttpUserAgent, "https://google.com", "<html")
+	elapsed, err := client.TestURL(defaultHTTPUserAgent, "https://google.com", "<html")
 
 	t.Nil(err)
 

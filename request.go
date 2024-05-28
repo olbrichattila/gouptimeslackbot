@@ -20,7 +20,7 @@ func (r *request) get(userAgent, url string) (string, error) {
 	}
 
 	if userAgent == "" {
-		userAgent = defaultHttpUserAgent
+		userAgent = defaultHTTPUserAgent
 	}
 
 	req.Header.Set("User-Agent", userAgent)

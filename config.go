@@ -8,11 +8,11 @@ type configInterface interface {
 
 type configAccount struct {
 	SlackBotToken    string `yaml:"SlackBotToken"`
-	SlackChannelId   string `yaml:"SlackChannelId"`
-	MonitorUrl       string `yaml:"MonitorUrl"`
+	SlackChannelID   string `yaml:"SlackChannelID"`
+	MonitorURL       string `yaml:"MonitorURL"`
 	MonitorText      string `yaml:"MonitorText"`
 	SlowWarningLimit int    `yaml:"SlowWarningLimit"`
-	HttpUserAgent    string `yaml:"HttpUserAgent"`
+	HTTPUserAgent    string `yaml:"HTTPUserAgent"`
 }
 
 type config struct {

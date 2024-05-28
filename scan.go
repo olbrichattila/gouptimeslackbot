@@ -11,13 +11,13 @@ type scannerInterface interface {
 
 type scanner struct {
 	client    upClientInterface
-	publisher SlackPublisherInterface
+	publisher slackPublisherInterface
 	logger    loggerInterface
 }
 
 func newScanner(
 	client upClientInterface,
-	publisher SlackPublisherInterface,
+	publisher slackPublisherInterface,
 	logger loggerInterface,
 ) *scanner {
 	s := &scanner{}
@@ -34,16 +34,16 @@ func (s *scanner) Scan(config configAccount) {
 
 func (s *scanner) doScan(config configAccount) {
 	formattedDateTime := time.Now().Format("2006-01-02 15:04:05")
-	elapsed, err := s.client.TestUrl(config.HttpUserAgent, config.MonitorUrl, config.MonitorText)
+	elapsed, err := s.client.TestURL(config.HTTPUserAgent, config.MonitorURL, config.MonitorText)
 	if err != nil {
 		message := fmt.Sprintf(
 			"Host: %s:\nUp bot report:\n\tDate: %s\n\tElapsed: %d miliseconds\n\tError:%v",
-			config.MonitorUrl,
+			config.MonitorURL,
 			formattedDateTime,
 			elapsed,
 			err,
 		)
-		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelId, message)
+		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelID, message)
 		if err != nil {
 			s.logger.Log(err.Error())
 		}
@@ -52,12 +52,12 @@ func (s *scanner) doScan(config configAccount) {
 	if config.SlowWarningLimit > 0 && elapsed > config.SlowWarningLimit {
 		message := fmt.Sprintf(
 			"Host: %s:\nSlow warning limit reached:\n\tDate: %s\n\tLimit: %d miliseconds\n\tElapsed: %d miliseconds",
-			config.MonitorUrl,
+			config.MonitorURL,
 			formattedDateTime,
 			config.SlowWarningLimit,
 			elapsed,
 		)
-		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelId, message)
+		err = s.publisher.Send(config.SlackBotToken, config.SlackChannelID, message)
 		if err != nil {
 			s.logger.Log(err.Error())
 		}

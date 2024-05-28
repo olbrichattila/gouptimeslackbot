@@ -1,3 +1,5 @@
+// Package main provides the entry point for the application.
+// This package is a slack uptime boot, see README.md
 package main
 
 import (
@@ -6,19 +8,19 @@ import (
 )
 
 const defaultScanFrequency = 60
-const defaultHttpUserAgent = "GolangUptimeBot/1.0"
+const defaultHTTPUserAgent = "GolangUptimeBot/1.0"
 
 type app struct {
 	client         upClientInterface
-	slackPublisher SlackPublisherInterface
+	slackPublisher slackPublisherInterface
 	config         configInterface
 	scanner        scannerInterface
-	logger         loggerInterface
+	// logger         loggerInterface //@TODO Add logger
 }
 
 func newApp() *app {
 	client := newUpClient(&request{})
-	publisher := NewSlackPublisher()
+	publisher := newSlackPublisher()
 	logger := newLogger()
 
 	return &app{

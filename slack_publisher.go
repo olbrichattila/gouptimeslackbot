@@ -4,18 +4,18 @@ import (
 	"github.com/slack-go/slack"
 )
 
-type SlackPublisherInterface interface {
+type slackPublisherInterface interface {
 	Send(string, string, string) error
 }
 
-type SlackPublisher struct {
+type slackPublisher struct {
 }
 
-func NewSlackPublisher() *SlackPublisher {
-	return &SlackPublisher{}
+func newSlackPublisher() *slackPublisher {
+	return &slackPublisher{}
 }
 
-func (m *SlackPublisher) Send(token, channelID, message string) error {
+func (m *slackPublisher) Send(token, channelID, message string) error {
 	api := slack.New(token)
 
 	msgOptions := slack.MsgOptionText(message, false)

@@ -28,11 +28,11 @@ func (t *configTestSuite) TestConfigReturnsCorrectDefaultValuesFromEnv() {
 
 	for _, a := range *accounts {
 		t.Equal("", a.MonitorText)
-		t.Equal("", a.MonitorUrl)
+		t.Equal("", a.MonitorURL)
 		t.Equal("", a.SlackBotToken)
-		t.Equal("", a.SlackChannelId)
+		t.Equal("", a.SlackChannelID)
 		t.Equal(0, a.SlowWarningLimit)
-		t.Equal("", a.HttpUserAgent)
+		t.Equal("", a.HTTPUserAgent)
 	}
 }
 
@@ -45,11 +45,11 @@ func (t *configTestSuite) TestConfigReturnsCorrectValuesFromEnv() {
 
 	for _, a := range *accounts {
 		t.Equal("text", a.MonitorText)
-		t.Equal("url", a.MonitorUrl)
+		t.Equal("url", a.MonitorURL)
 		t.Equal("token", a.SlackBotToken)
-		t.Equal("channel id", a.SlackChannelId)
+		t.Equal("channel id", a.SlackChannelID)
 		t.Equal(1500, a.SlowWarningLimit)
-		t.Equal("TestUserAgent/1.0", a.HttpUserAgent)
+		t.Equal("TestUserAgent/1.0", a.HTTPUserAgent)
 	}
 }
 
