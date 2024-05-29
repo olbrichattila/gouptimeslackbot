@@ -96,6 +96,5 @@ Application killed
 ## Coming soon
 - Report with daily maximum, minimum and avarage page loads, number of outages once a day
 - Database support to save report 
-- Different scan frequency per user
-- Avoid spamming of Slack if the error is too frequent and group them into one message per X time period.
 - Sending out the daily report to slack as well
+- Separate slow load warning from uptime error when grouping the errors
