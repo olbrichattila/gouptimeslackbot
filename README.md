@@ -23,6 +23,9 @@ SCAN_FREQUENCY=30
 
 # User agent, if not set it uses GolangUptimeBot/1.0
 HTTP_USER_AGENT="TestUptimeBot/1.0"
+
+# If the error occures frequently we stop flooding slack, we repeat the message only after the delay secounds passed, aggregating the number of occurances.
+REPEAT_NOTIFICATION_DELAY=20
 ```
 
 ### Yaml file
@@ -30,24 +33,28 @@ With this configuration you can only configure 1 or multiple domains.
 Create a file called ```config.yaml``` into the same folder where your executable is
 
 ```
-ScanFrequency: 0
+
 Accounts:
 - SlackBotToken: your token
-  SlackChannelId: your channel id
-  MonitorUrl: https://yourdomain1.com
+  ScanFrequency: 10
+  SlackChannelID: your channel id
+  MonitorURL: https://yourdomain1.com
   MonitorText: <html
-  HttpUserAgent: UptimeBot/1.0
+  HTTPUserAgent: UptimeBot/1.0
   SlowWarningLimit: 3000
+  RepeatNotificationDelay: 20
 - SlackBotToken: your token
-  SlackChannelId: your channel id
-  MonitorUrl: https://yourdomain2.com/health
+  ScanFrequency: 10
+  SlackChannelID: your channel id
+  MonitorURL: https://yourdomain2.com/health
   MonitorText: Welcome 
-  HttpUserAgent: UptimeBot/1.0
+  HTTPUserAgent: UptimeBot/1.0
   SlowWarningLimit: 6000
+  RepeatNotificationDelay: 20
 ```
 
 It is possible to set the same token and same channel, or same token different channel or different token and different channel in any combination
-Note: The HttpUserAgent not required, if not set it will defult to `GolangUptimeBot/1.0` as of now
+Note: The HTTPUserAgent not required, if not set it will defult to `GolangUptimeBot/1.0` as of now
 
 ### Closing the applications
 ```

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -29,33 +28,25 @@ func (c *yamlConfig) getConfigAccounts() *[]configAccount {
 	return &c.config.Accounts
 }
 
-func (c *yamlConfig) getScanFrequency() int {
-	frequency := c.config.ScanFrequency
-	if frequency == 0 {
-		return defaultScanFrequency
-	}
+// This function is now unused, place it back if you need to create an example config file
+// func (c *yamlConfig) createExampleConfig() {
+// 	conf := newConfig(true)
 
-	return frequency
-}
+// 	a := []configAccount{conf.config.Accounts[0], conf.config.Accounts[0]}
+// 	y := &config{Accounts: a}
+// 	file, err := os.Create(yamlFileName)
+// 	if err != nil {
+// 		fmt.Println("Error creating file:", err)
+// 		return
+// 	}
+// 	defer file.Close()
 
-func (c *yamlConfig) createExampleConfig() {
-	conf := newConfig(true)
-
-	a := []configAccount{conf.config.Accounts[0], conf.config.Accounts[0]}
-	y := &config{Accounts: a}
-	file, err := os.Create(yamlFileName)
-	if err != nil {
-		fmt.Println("Error creating file:", err)
-		return
-	}
-	defer file.Close()
-
-	encoder := yaml.NewEncoder(file)
-	if err := encoder.Encode(y); err != nil {
-		fmt.Println("Error encoding to YAML:", err)
-		return
-	}
-}
+// 	encoder := yaml.NewEncoder(file)
+// 	if err := encoder.Encode(y); err != nil {
+// 		fmt.Println("Error encoding to YAML:", err)
+// 		return
+// 	}
+// }
 
 func (c *yamlConfig) loadConfig() {
 	file, err := ioutil.ReadFile(yamlFileName)

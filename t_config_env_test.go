@@ -22,34 +22,34 @@ func (t *configTestSuite) SetupTest() {
 
 func (t *configTestSuite) TestConfigReturnsCorrectDefaultValuesFromEnv() {
 	config := newConfig(false)
-	t.Equal(60, config.getScanFrequency())
-
 	accounts := config.getConfigAccounts()
 
 	for _, a := range *accounts {
 		t.Equal("", a.MonitorText)
-		t.Equal("", a.MonitorUrl)
+		t.Equal("", a.MonitorURL)
 		t.Equal("", a.SlackBotToken)
-		t.Equal("", a.SlackChannelId)
-		t.Equal(0, a.SlowWarningLimit)
-		t.Equal("", a.HttpUserAgent)
+		t.Equal("", a.SlackChannelID)
+		t.Equal(3000, a.SlowWarningLimit)
+		t.Equal("", a.HTTPUserAgent)
+		t.Equal(3600, a.RepeatNotificationDelay)
+		t.Equal(60, a.ScanFrequency)
 	}
 }
 
 func (t *configTestSuite) TestConfigReturnsCorrectValuesFromEnv() {
 	t.setCustomEnvValues()
 	config := newConfig(false)
-	t.Equal(35, config.getScanFrequency())
-
 	accounts := config.getConfigAccounts()
 
 	for _, a := range *accounts {
 		t.Equal("text", a.MonitorText)
-		t.Equal("url", a.MonitorUrl)
+		t.Equal("url", a.MonitorURL)
 		t.Equal("token", a.SlackBotToken)
-		t.Equal("channel id", a.SlackChannelId)
+		t.Equal("channel id", a.SlackChannelID)
 		t.Equal(1500, a.SlowWarningLimit)
-		t.Equal("TestUserAgent/1.0", a.HttpUserAgent)
+		t.Equal("TestUserAgent/1.0", a.HTTPUserAgent)
+		t.Equal(150, a.RepeatNotificationDelay)
+		t.Equal(35, a.ScanFrequency)
 	}
 }
 
@@ -61,4 +61,5 @@ func (t *configTestSuite) setCustomEnvValues() {
 	os.Setenv("SLOW_WARNING_LIMIT", "1500")
 	os.Setenv("SCAN_FREQUENCY", "35")
 	os.Setenv("HTTP_USER_AGENT", "TestUserAgent/1.0")
+	os.Setenv("REPEAT_NOTIFICATION_DELAY", "150")
 }

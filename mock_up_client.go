@@ -12,7 +12,7 @@ func newUpClientSpy() *upClientSpy {
 	return &upClientSpy{}
 }
 
-func (u *upClientSpy) TestUrl(userAgent, url, contains string) (int, error) {
+func (u *upClientSpy) TestURL(_, _, _ string) (int, error) {
 	u.called++
 	return u.elapsedTime, u.err
 }
