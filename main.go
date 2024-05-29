@@ -4,10 +4,11 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
-const defaultScanFrequency = 60
 const defaultHTTPUserAgent = "GolangUptimeBot/1.0"
 
 type app struct {
@@ -21,6 +22,7 @@ type app struct {
 func newApp() *app {
 	client := newUpClient(&request{})
 	publisher := newSlackPublisher()
+	// publisher := newSlackPublisherSpy() // Swap this for testing
 	logger := newLogger()
 
 	return &app{
@@ -32,16 +34,18 @@ func newApp() *app {
 }
 
 func main() {
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
 	app := newApp()
 
-	frequency := app.config.getScanFrequency()
 	accounts := app.config.getConfigAccounts()
-	for {
-		for _, config := range *accounts {
-			app.scanner.Scan(config)
-		}
-		time.Sleep(time.Duration(frequency) * time.Second)
+
+	for _, config := range *accounts {
+		app.scanner.Scan(config)
 	}
+
+	<-sigs
 }
 
 func resolveConfig() configInterface {

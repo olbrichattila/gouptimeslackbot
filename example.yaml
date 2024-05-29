@@ -1,14 +1,18 @@
-ScanFrequency: 0
+
 Accounts:
 - SlackBotToken: your token
+  ScanFrequency: 10
   SlackChannelID: your channel id
   MonitorURL: https://yourdomain1.com
   MonitorText: <html
   HTTPUserAgent: TestUptimeBot/1.0
   SlowWarningLimit: 3000
+  RepeatNotificationDelay: 20
 - SlackBotToken: your token
+  ScanFrequency: 10
   SlackChannelID: your channel id
   MonitorURL: https://yourdomain2.com/health
   MonitorText: Welcome 
   HTTPUserAgent: TestUptimeBot/1.0
   SlowWarningLimit: 6000
+  RepeatNotificationDelay: 20

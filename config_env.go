@@ -30,15 +30,16 @@ func (c *envConfig) load() {
 	}
 
 	account := configAccount{
-		SlackBotToken:    os.Getenv("SLACK_BOT_TOKEN"),
-		SlackChannelID:   os.Getenv("SLACK_CHANNEL_ID"),
-		MonitorURL:       os.Getenv("MONITOR_URL"),
-		MonitorText:      os.Getenv("MONITOR_TEXT"),
-		HTTPUserAgent:    os.Getenv("HTTP_USER_AGENT"),
-		SlowWarningLimit: c.asInt("SLOW_WARNING_LIMIT"),
+		SlackBotToken:           os.Getenv("SLACK_BOT_TOKEN"),
+		SlackChannelID:          os.Getenv("SLACK_CHANNEL_ID"),
+		MonitorURL:              os.Getenv("MONITOR_URL"),
+		MonitorText:             os.Getenv("MONITOR_TEXT"),
+		HTTPUserAgent:           os.Getenv("HTTP_USER_AGENT"),
+		SlowWarningLimit:        c.asInt("SLOW_WARNING_LIMIT", 3000),
+		RepeatNotificationDelay: c.asInt("REPEAT_NOTIFICATION_DELAY", 3600),
+		ScanFrequency:           c.asInt("SCAN_FREQUENCY", 60),
 	}
 
-	c.config.ScanFrequency = c.asInt("SCAN_FREQUENCY")
 	c.config.Accounts = []configAccount{account}
 }
 
@@ -46,24 +47,15 @@ func (c *envConfig) getConfigAccounts() *[]configAccount {
 	return &c.config.Accounts
 }
 
-func (c *envConfig) getScanFrequency() int {
-	frequency := c.config.ScanFrequency
-	if frequency == 0 {
-		return defaultScanFrequency
-	}
-
-	return frequency
-}
-
-func (c *envConfig) asInt(env string) int {
+func (c *envConfig) asInt(env string, def int) int {
 	value := os.Getenv(env)
 	if value == "" {
-		return 0
+		return def
 	}
 
 	result, err := strconv.Atoi(value)
 	if err != nil {
-		return 0
+		return def
 	}
 
 	return result

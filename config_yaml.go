@@ -28,15 +28,6 @@ func (c *yamlConfig) getConfigAccounts() *[]configAccount {
 	return &c.config.Accounts
 }
 
-func (c *yamlConfig) getScanFrequency() int {
-	frequency := c.config.ScanFrequency
-	if frequency == 0 {
-		return defaultScanFrequency
-	}
-
-	return frequency
-}
-
 // This function is now unused, place it back if you need to create an example config file
 // func (c *yamlConfig) createExampleConfig() {
 // 	conf := newConfig(true)

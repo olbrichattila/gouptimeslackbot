@@ -19,11 +19,13 @@ func TestScanRunner(t *testing.T) {
 func (t *scanTestSuite) SetupTest() {
 	fmt.Println(Yellow+"Running test scan env: "+Green, t.T().Name()+Reset)
 	t.account = &configAccount{
-		SlackBotToken:    "token",
-		SlackChannelID:   "channelId",
-		MonitorURL:       "http://test.com",
-		MonitorText:      "<html",
-		SlowWarningLimit: 30,
+		SlackBotToken:           "token",
+		SlackChannelID:          "channelId",
+		MonitorURL:              "http://test.com",
+		MonitorText:             "<html",
+		SlowWarningLimit:        30,
+		RepeatNotificationDelay: 20,
+		ScanFrequency:           60,
 	}
 }
 
@@ -34,7 +36,7 @@ func (t *scanTestSuite) TestItMessageSentIfLoadingTimeExceededWarningLimit() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account)
+	scanner.doScan(*t.account, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -50,7 +52,7 @@ func (t *scanTestSuite) TestItMessageNotSentIfLoadingTimeUnderWarningLimit() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account)
+	scanner.doScan(*t.account, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -66,7 +68,7 @@ func (t *scanTestSuite) TestItMessageSentIfPageDidNotLoad() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account)
+	scanner.doScan(*t.account, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -82,7 +84,7 @@ func (t *scanTestSuite) TestIfTwoMessageSentIfPageDidNotLoadAndTimeAlsoExceeded(
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account)
+	scanner.doScan(*t.account, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -98,7 +100,7 @@ func (t *scanTestSuite) TestSendMessageErrorsAreLogged() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account)
+	scanner.doScan(*t.account, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -107,4 +109,20 @@ func (t *scanTestSuite) TestSendMessageErrorsAreLogged() {
 	t.Equal(2, loggerSpy.called)
 
 	t.Equal("cannot send slack message", loggerSpy.lastMessage)
+}
+
+func (t *scanTestSuite) TestIfSkipSendingFlagIsConsidered() {
+	upClientSpy := newUpClientSpy().withElapsedTime(100)
+	publisherSpy := newSlackPublisherSpy()
+	loggerSpy := newLoggerSpy()
+
+	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
+
+	scanner.doScan(*t.account, true)
+
+	t.Equal(1, upClientSpy.called)
+
+	t.Equal(0, publisherSpy.called)
+
+	t.Equal(0, loggerSpy.called)
 }
