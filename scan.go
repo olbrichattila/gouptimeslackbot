@@ -34,6 +34,7 @@ func newScanner(
 }
 
 func (s *scanner) Scan(config configAccount) {
+	// TODO separate slow warning message from uptime error
 	go func() {
 		uptime := uptimeInfo{lastInitiated: time.Now(), errorCount: 0}
 
@@ -56,7 +57,6 @@ func (s *scanner) Scan(config configAccount) {
 					uptime.errorCount,
 				)
 
-				fmt.Println(message)
 				uptime.errorCount = 0
 				uptime.lastInitiated = time.Now()
 
@@ -64,7 +64,6 @@ func (s *scanner) Scan(config configAccount) {
 			}
 
 			time.Sleep(time.Duration(config.ScanFrequency) * time.Second)
-			fmt.Println(config.MonitorURL)
 		}
 	}()
 }
@@ -89,7 +88,6 @@ func (s *scanner) doScan(config configAccount, skipSending bool) bool {
 				s.logger.Log(err.Error())
 			}
 		}
-
 	}
 
 	if config.SlowWarningLimit > 0 && elapsed > config.SlowWarningLimit {
