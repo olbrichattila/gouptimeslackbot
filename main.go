@@ -16,7 +16,6 @@ type app struct {
 	slackPublisher slackPublisherInterface
 	config         configInterface
 	scanner        scannerInterface
-	// logger         loggerInterface //@TODO Add logger
 }
 
 func newApp() *app {
