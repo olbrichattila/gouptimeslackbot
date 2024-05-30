@@ -36,7 +36,7 @@ func (t *scanTestSuite) TestItMessageSentIfLoadingTimeExceededWarningLimit() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account, false)
+	scanner.doScan(*t.account, false, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -52,7 +52,7 @@ func (t *scanTestSuite) TestItMessageNotSentIfLoadingTimeUnderWarningLimit() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account, false)
+	scanner.doScan(*t.account, false, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -68,7 +68,7 @@ func (t *scanTestSuite) TestItMessageSentIfPageDidNotLoad() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account, false)
+	scanner.doScan(*t.account, false, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -84,7 +84,7 @@ func (t *scanTestSuite) TestIfTwoMessageSentIfPageDidNotLoadAndTimeAlsoExceeded(
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account, false)
+	scanner.doScan(*t.account, false, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -100,7 +100,7 @@ func (t *scanTestSuite) TestSendMessageErrorsAreLogged() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account, false)
+	scanner.doScan(*t.account, false, false)
 
 	t.Equal(1, upClientSpy.called)
 
@@ -118,7 +118,7 @@ func (t *scanTestSuite) TestIfSkipSendingFlagIsConsidered() {
 
 	scanner := newScanner(upClientSpy, publisherSpy, loggerSpy)
 
-	scanner.doScan(*t.account, true)
+	scanner.doScan(*t.account, true, true)
 
 	t.Equal(1, upClientSpy.called)
 

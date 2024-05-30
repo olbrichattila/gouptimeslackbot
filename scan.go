@@ -16,8 +16,13 @@ type scanner struct {
 }
 
 type uptimeInfo struct {
-	lastInitiated time.Time
-	errorCount    int
+	lastReportTime time.Time
+	errorCount     int
+}
+
+type uptimeInfos struct {
+	errorInfo       uptimeInfo
+	slowWarningInfo uptimeInfo
 }
 
 func newScanner(
@@ -34,47 +39,69 @@ func newScanner(
 }
 
 func (s *scanner) Scan(config configAccount) {
-	// TODO separate slow warning message from uptime error
 	go func() {
-		uptime := uptimeInfo{lastInitiated: time.Now(), errorCount: 0}
+		now := time.Now()
+		uptime := uptimeInfos{
+			errorInfo:       uptimeInfo{lastReportTime: now, errorCount: 0},
+			slowWarningInfo: uptimeInfo{lastReportTime: now, errorCount: 0},
+		}
 
 		for {
-			skipSending := uptime.errorCount > 0
-			isSent := s.doScan(config, skipSending)
-			if isSent {
-				uptime.errorCount++
-				if !skipSending {
-					uptime.lastInitiated = time.Now()
-				}
-			}
+			skipErrorMessageSending := s.skipSending(uptime.errorInfo)
+			skipSlowWarningMessageSending := s.skipSending(uptime.slowWarningInfo)
+			errorMessageSent, slowWarningMessageSent := s.doScan(config, skipErrorMessageSending, skipSlowWarningMessageSending)
 
-			if uptime.errorCount > 1 && time.Since(uptime.lastInitiated).Seconds() > float64(config.RepeatNotificationDelay) {
-				message := fmt.Sprintf(
-					"Host: %s:\nUp bot report:\n\tStarded Date: %s\n\tDate: %s\n\tOccured  %d times",
-					config.MonitorURL,
-					uptime.lastInitiated.Format("2006-01-02 15:04:05"),
-					time.Now().Format("2006-01-02 15:04:05"),
-					uptime.errorCount,
-				)
+			s.updateMessageSentStatus(&uptime.errorInfo, errorMessageSent, skipErrorMessageSending)
+			s.updateMessageSentStatus(&uptime.slowWarningInfo, slowWarningMessageSent, skipSlowWarningMessageSending)
 
-				uptime.errorCount = 0
-				uptime.lastInitiated = time.Now()
-
-				_ = s.publisher.Send(config.SlackBotToken, config.SlackChannelID, message)
-			}
+			s.sendAggregateMessage(config, &uptime.errorInfo, float64(config.RepeatNotificationDelay), "Page load error aggretate message")
+			s.sendAggregateMessage(config, &uptime.slowWarningInfo, float64(config.RepeatNotificationDelay), "Slow page load warning aggregate message")
 
 			time.Sleep(time.Duration(config.ScanFrequency) * time.Second)
 		}
 	}()
 }
 
-func (s *scanner) doScan(config configAccount, skipSending bool) bool {
-	isMessageSent := false
+func (s *scanner) updateMessageSentStatus(uptimeinfo *uptimeInfo, messageSent, skipSending bool) {
+	if messageSent {
+		uptimeinfo.errorCount++
+		if !skipSending {
+			uptimeinfo.lastReportTime = time.Now()
+		}
+	}
+}
+
+func (s *scanner) sendAggregateMessage(config configAccount, uptimeinfo *uptimeInfo, delay float64, message string) {
+	if uptimeinfo.errorCount > 1 && time.Since(uptimeinfo.lastReportTime).Seconds() > delay {
+		message := fmt.Sprintf(
+			"%s\nHost: %s:\nUp bot report:\n\tStarded Date: %s\n\tDate: %s\n\tOccured  %d times\nThe message is sent after %.0f seconds",
+			message,
+			config.MonitorURL,
+			uptimeinfo.lastReportTime.Format("2006-01-02 15:04:05"),
+			time.Now().Format("2006-01-02 15:04:05"),
+			uptimeinfo.errorCount,
+			delay,
+		)
+
+		uptimeinfo.errorCount = 0
+		uptimeinfo.lastReportTime = time.Now()
+
+		_ = s.publisher.Send(config.SlackBotToken, config.SlackChannelID, message)
+	}
+}
+
+func (s *scanner) skipSending(uptimeInfo uptimeInfo) bool {
+	return uptimeInfo.errorCount > 0
+}
+
+func (s *scanner) doScan(config configAccount, skipSendingErrorReport, skipSendingSlowWarningReport bool) (bool, bool) {
+	errorMessageSent := false
+	slowWarningMessageSent := false
 	formattedDateTime := time.Now().Format("2006-01-02 15:04:05")
 	elapsed, err := s.client.TestURL(config.HTTPUserAgent, config.MonitorURL, config.MonitorText)
 	if err != nil {
-		isMessageSent = true
-		if !skipSending {
+		errorMessageSent = true
+		if !skipSendingErrorReport {
 			message := fmt.Sprintf(
 				"Host: %s:\nUp bot report:\n\tDate: %s\n\tElapsed: %d miliseconds\n\tError:%v",
 				config.MonitorURL,
@@ -91,8 +118,8 @@ func (s *scanner) doScan(config configAccount, skipSending bool) bool {
 	}
 
 	if config.SlowWarningLimit > 0 && elapsed > config.SlowWarningLimit {
-		isMessageSent = true
-		if !skipSending {
+		slowWarningMessageSent = true
+		if !skipSendingSlowWarningReport {
 			message := fmt.Sprintf(
 				"Host: %s:\nSlow warning limit reached:\n\tDate: %s\n\tLimit: %d miliseconds\n\tElapsed: %d miliseconds",
 				config.MonitorURL,
@@ -108,5 +135,5 @@ func (s *scanner) doScan(config configAccount, skipSending bool) bool {
 		}
 	}
 
-	return isMessageSent
+	return errorMessageSent, slowWarningMessageSent
 }

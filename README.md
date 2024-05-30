@@ -97,4 +97,3 @@ Application killed
 - Report with daily maximum, minimum and avarage page loads, number of outages once a day
 - Database support to save report 
 - Sending out the daily report to slack as well
-- Separate slow load warning from uptime error when grouping the errors
