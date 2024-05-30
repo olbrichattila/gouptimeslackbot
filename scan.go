@@ -102,6 +102,7 @@ func (s *scanner) doScan(config configAccount, skipSendingErrorReport, skipSendi
 	if err != nil {
 		errorMessageSent = true
 		if !skipSendingErrorReport {
+			// TODO those can be separated to a function as they are very similar
 			message := fmt.Sprintf(
 				"Host: %s:\nUp bot report:\n\tDate: %s\n\tElapsed: %d miliseconds\n\tError:%v",
 				config.MonitorURL,
